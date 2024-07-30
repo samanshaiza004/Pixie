@@ -1,33 +1,36 @@
-import { Dirent } from 'fs'
+import { contextBridge, ipcRenderer } from 'electron'
+import fs from 'fs'
+import path from 'path'
 
-const { contextBridge, ipcRenderer } = require('electron')
-const fs = require('fs')
-const path = require('path')
+interface FileInfo {
+  name: string
+  isDirectory: boolean
+}
 
-export const api = {
+const api = {
   sendMessage: (message: string) => {
     ipcRenderer.send('message', message)
   },
   renderPath: (pathParts: string[]) => {
     return path.join(...pathParts)
   },
-  readdir: (path: string[]): Promise<Dirent[]> => {
+  readdir: (pathParts: string[]): Promise<FileInfo[]> => {
     return new Promise((resolve, reject) => {
-      let renderedPath = path.join('/')
+      const renderedPath = path.join(...pathParts)
       ipcRenderer.send('message', 'reading directory: ' + renderedPath)
-      fs.readdir(
-        renderedPath,
-        { encoding: 'utf-8', withFileTypes: true },
-        (err: any, files: any) => {
-          if (err) {
-            ipcRenderer.send('message', 'bridge.ts: ' + err)
-            reject(new Error(err as unknown as string))
-          } else {
-            // ipcRenderer.send('message', 'files received ' + files)
-            resolve(files)
-          }
+      fs.readdir(renderedPath, { withFileTypes: true }, (err, files) => {
+        if (err) {
+          ipcRenderer.send('message', 'readdir preload.ts: ' + err)
+          reject(new Error(err as unknown as string))
+        } else {
+          resolve(
+            files.map(file => ({
+              name: file.name,
+              isDirectory: file.isDirectory(),
+            }))
+          )
         }
-      )
+      })
     })
   },
   moveDir: async (currentPath: string[], newDir: string) => {
@@ -40,30 +43,33 @@ export const api = {
         if (api.containsDir(dirItems, newDir)) {
           currentPath.push(newDir)
         } else {
-          ipcRenderer.send('message', 'bridge.ts: Directory not found')
+          ipcRenderer.send('message', 'preload.ts: Directory not found')
         }
       } catch (err) {
-        ipcRenderer.send('message', 'bridge.ts: ' + err)
+        ipcRenderer.send('message', 'moveDir preload.ts: ' + err)
       }
     }
-    ipcRenderer.send('message', 'bridge.ts: returning path ' + currentPath)
+    ipcRenderer.send('message', 'preload.ts: returning path ' + currentPath)
     return currentPath
   },
 
-  isDirectory: (path: string): boolean => {
+  isDirectory: (fullPath: string): boolean => {
     try {
-      return fs.lstatSync(path).isDirectory()
+      return fs.lstatSync(fullPath).isDirectory()
     } catch (e) {
-      ipcRenderer.send('message', 'Error checking if path is directory: ' + e)
+      ipcRenderer.send(
+        'message',
+        'preload.ts: Error checking if path is directory: ' + e
+      )
       return false
     }
   },
   on: (channel: string, callback: Function) => {
     ipcRenderer.on(channel, (_, data) => callback(data))
   },
-  containsDir: (files: any[], dir: string): boolean => {
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].name === dir && files[i].isDirectory()) {
+  containsDir: (files: FileInfo[], dir: string): boolean => {
+    for (const file of files) {
+      if (file.name === dir && file.isDirectory) {
         return true
       }
     }

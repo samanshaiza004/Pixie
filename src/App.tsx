@@ -3,6 +3,20 @@ import { GlobalStyle } from './styles/GlobalStyle'
 import { Dirent } from 'original-fs'
 import React, { useState, useEffect } from 'react'
 
+declare global {
+  interface Window {
+    Main: {
+      sendMessage: (message: string) => void
+      readdir: (
+        path: string[]
+      ) => Promise<{ name: string; isDirectory: boolean }[]>
+      renderPath: (pathParts: string[]) => string
+      moveDir: (currentPath: string[], newDir: string) => Promise<string[]>
+      isDirectory: (path: string) => boolean
+    }
+  }
+}
+
 export function App() {
   const [files, setFiles] = useState<Dirent[]>([])
   const [path, setPath] = useState<string[]>([
@@ -24,16 +38,11 @@ export function App() {
   }
   const sortFiles = (files: Dirent[]): Dirent[] => {
     return files.sort((a: Dirent, b: Dirent) => {
-      if (a.isDirectory() && !b.isDirectory()) {
-        window.Main.sendMessage('a is directory')
+      if (a.isDirectory && !b.isDirectory) {
         return -1
       }
 
-      if (
-        !window.Main.isDirectory(a.parentPath) &&
-        window.Main.isDirectory(b.parentPath)
-      ) {
-        window.Main.sendMessage('b is directory')
+      if (!a.isDirectory && b.isDirectory) {
         return 1
       }
       return a.name.localeCompare(b.name)
