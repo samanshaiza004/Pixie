@@ -1,3 +1,4 @@
+// electron/main.ts
 import { app, BrowserWindow, ipcMain } from 'electron'
 
 let mainWindow: BrowserWindow | null
@@ -15,9 +16,9 @@ function createWindow() {
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
     height: 700,
-    backgroundColor: '#191622',
+    backgroundColor: '#f8f8ff',
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       contextIsolation: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
