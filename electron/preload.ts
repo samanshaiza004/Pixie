@@ -1,4 +1,6 @@
+// electron/preload.ts
 import { contextBridge, ipcRenderer } from 'electron'
+import { dialog, ipcMain } from 'electron/main'
 import fs from 'fs'
 import path from 'path'
 
