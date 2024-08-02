@@ -1,6 +1,6 @@
 // electron/preload.ts
-import { contextBridge, ipcRenderer } from 'electron'
-import { dialog, ipcMain } from 'electron/main'
+import { contextBridge, ipcRenderer, dialog, ipcMain } from 'electron'
+
 import fs from 'fs'
 import path from 'path'
 
@@ -76,6 +76,9 @@ const api = {
       }
     }
     return false
+  },
+  openDirectoryPicker: () => {
+    return ipcRenderer.invoke('open-directory-picker')
   },
 }
 

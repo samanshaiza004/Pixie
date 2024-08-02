@@ -1,5 +1,7 @@
 // electron/main.ts
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
+import * as url from 'node:url'
+import path from 'path'
 
 let mainWindow: BrowserWindow | null
 
@@ -10,6 +12,15 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 //   process.env.NODE_ENV === 'production'
 //     ? process.resourcesPath
 //     : app.getAppPath()
+
+app.whenReady().then(() => {
+  protocol.handle('pixie', async request => {
+    const filePath = request.url.slice('pixie://'.length)
+    return net.fetch(
+      url.pathToFileURL(path.join(__dirname, filePath)).toString()
+    )
+  })
+})
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -32,6 +43,14 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  ipcMain.handle('open-directory-picker', async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+      title: 'Select a directory',
+    })
+    return result.filePaths[0]
   })
 }
 

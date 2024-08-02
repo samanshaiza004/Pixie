@@ -1,13 +1,22 @@
 // src/App.tsx
 import { GlobalStyle } from './styles/GlobalStyle'
 import { Dirent } from 'original-fs'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { FileItem } from './components/FileItem'
 import { FileAddressItem } from './components/FileAddressItem/FileAddressItem'
+import { DirectoryPicker } from './components/DirectoryPicker/DirectoryPicker'
+import WaveSurfer from 'wavesurfer.js'
 
 interface FileInfo {
   name: string
   isDirectory: boolean
+}
+
+const FILE_EXTENSIONS = {
+  images: ['jpg', 'png'],
+  text: ['txt', 'md'],
+  audio: ['mp3', 'wav', 'flac', 'ogg'],
+  video: ['mp4', 'mov', 'avi'],
 }
 
 declare global {
@@ -20,6 +29,7 @@ declare global {
       renderPath: (pathParts: string[]) => string
       moveDir: (currentPath: string[], newDir: string) => Promise<string[]>
       isDirectory: (path: string) => boolean
+      openDirectoryPicker: () => Promise<string | null>
     }
   }
 }
@@ -33,6 +43,7 @@ export function App() {
     'dev',
     'july2024',
   ])
+  const [currentAudio, setCurrentAudio] = useState<string | null>(null)
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -43,6 +54,15 @@ export function App() {
         setFiles(sortedFiles)
       })
       .catch((err: string) => window.Main.sendMessage('App.tsx: ' + err))
+  }
+
+  const waveformRef = useRef<HTMLDivElement>(null)
+  const waveSurferRef = useRef<WaveSurfer | null>(null)
+
+  const playAudio = (path: string) => {
+    if (waveSurferRef.current) {
+      waveSurferRef.current.load(path)
+    }
   }
 
   // sort files: directories first, then files, then alphabetically
@@ -61,6 +81,20 @@ export function App() {
     getFiles()
   }, [path])
 
+  useEffect(() => {
+    if (waveformRef.current) {
+      waveSurferRef.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: 'violet',
+        progressColor: 'purple',
+      })
+
+      waveSurferRef.current.on('ready', () => {
+        waveSurferRef.current?.play()
+      })
+    }
+  })
+
   const handleDirectoryClick = async (dir: string) => {
     scrollToTop()
     window.Main.sendMessage('directory clicked: ' + dir)
@@ -68,8 +102,21 @@ export function App() {
     window.Main.sendMessage('new path: ' + JSON.stringify(newPath))
     setPath(newPath.slice(0, newPath.length))
   }
+  const handleFileClick = (item: FileInfo) => {
+    const extension = item.name.split('.').pop()
+    if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
+      const audioPath = window.Main.renderPath([...path, item.name])
+      setCurrentAudio(audioPath)
+      playAudio(`pixie:/${audioPath}`)
+    }
+  }
+
+  const handleDirectorySelected = async (dir: string) => {
+    setPath([dir])
+  }
   return (
     <div style={{ color: 'white' }}>
+      <DirectoryPicker onDirectorySelected={handleDirectorySelected} />
       <div
         style={{
           flexDirection: 'row',
@@ -100,6 +147,8 @@ export function App() {
                 onClick={() => {
                   if (window.Main.isDirectory(fullPath)) {
                     handleDirectoryClick(file.name)
+                  } else {
+                    handleFileClick(file)
                   }
                 }}
                 fileName={file.name}
@@ -112,6 +161,10 @@ export function App() {
         ) : (
           <p>Loading...</p>
         )}
+      </div>
+      <div>
+        currentAudio: {currentAudio}
+        <div ref={waveformRef} />
       </div>
     </div>
   )
