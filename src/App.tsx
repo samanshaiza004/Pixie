@@ -61,7 +61,10 @@ export function App() {
 
   const playAudio = (path: string) => {
     if (waveSurferRef.current) {
-      waveSurferRef.current.load(path)
+      waveSurferRef.current.stop()
+      // waveSurferRef.current.empty()
+      waveSurferRef.current?.load(path)
+      // waveSurferRef.current?.play()
     }
   }
 
@@ -85,15 +88,23 @@ export function App() {
     if (waveformRef.current) {
       waveSurferRef.current = WaveSurfer.create({
         container: waveformRef.current,
-        waveColor: 'violet',
+        waveColor: 'white',
         progressColor: 'purple',
+        barWidth: 4,
+        barRadius: 30,
+        barHeight: 4,
+        height: 64,
       })
 
       waveSurferRef.current.on('ready', () => {
         waveSurferRef.current?.play()
       })
+
+      waveSurferRef.current.on('click', () => {
+        waveSurferRef.current?.play()
+      })
     }
-  })
+  }, [])
 
   const handleDirectoryClick = async (dir: string) => {
     scrollToTop()
@@ -107,7 +118,7 @@ export function App() {
     if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
       const audioPath = window.Main.renderPath([...path, item.name])
       setCurrentAudio(audioPath)
-      playAudio(`pixie:/${audioPath}`)
+      playAudio(`sample:///${audioPath}`)
     }
   }
 
@@ -115,7 +126,7 @@ export function App() {
     setPath([dir])
   }
   return (
-    <div style={{ color: 'white' }}>
+    <div style={{ height: '100vh' }}>
       <DirectoryPicker onDirectorySelected={handleDirectorySelected} />
       <div
         style={{

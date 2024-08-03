@@ -13,12 +13,17 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 //     ? process.resourcesPath
 //     : app.getAppPath()
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'sample',
+    privileges: { bypassCSP: true, stream: true, supportFetchAPI: true },
+  },
+])
+
 app.whenReady().then(() => {
-  protocol.handle('pixie', async request => {
-    const filePath = request.url.slice('pixie://'.length)
-    return net.fetch(
-      url.pathToFileURL(path.join(__dirname, filePath)).toString()
-    )
+  protocol.handle('sample', request => {
+    const filePath = request.url.replace('sample:///', '')
+    return net.fetch('file://' + filePath)
   })
 })
 
