@@ -1,10 +1,12 @@
-## Electron + TypeScript + React
+## Pixie
 
-Boilerplate for a project using Electron, React and Typescript.
+Pixie is a simple, multi-platform sample explorer designed to make music creation friction-less and fun again. With Pixie, you can easily browse, organize, and play your audio samples using an intuitive interface powered by Electron and React.
 
-## Installation
+Features
 
-Use a package manager of your choice (npm, yarn, etc.) in order to install all dependencies
+- Cross-Platform: Works on Windows, macOS, and Linux.
+- Directory Browsing: Easily navigate through your file system to locate your samples.
+- Easy Setup: Simple and straightforward setup process.
 
 ```bash
 yarn
@@ -32,4 +34,4 @@ Pull requests are always welcome 😃.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Pixie is released under the MIT License. See [LICENSE](LICENSE) for more information.

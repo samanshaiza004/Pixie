@@ -68,8 +68,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Electron starter",
-        "executableName": "electron-starter",
+        "name": "pixie",
+        "executableName": "pixie",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
@@ -100,7 +100,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Electron Starter"
+            "name": "pixie"
           }
         },
         {
