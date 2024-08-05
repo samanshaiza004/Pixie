@@ -1,17 +1,13 @@
 // electron/main.ts
 import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
-import * as url from 'node:url'
-import path from 'path'
 
+import Store from 'electron-store'
 let mainWindow: BrowserWindow | null
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
-// const assetsPath =
-//   process.env.NODE_ENV === 'production'
-//     ? process.resourcesPath
-//     : app.getAppPath()
+const store = new Store()
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -42,10 +38,6 @@ function createWindow() {
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow?.webContents.openDevTools()
-  })
-
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -55,7 +47,15 @@ function createWindow() {
       properties: ['openDirectory'],
       title: 'Select a directory',
     })
+    if (result.filePaths[0]) {
+      store.set('lastSelectedDirectory', result.filePaths[0])
+    }
     return result.filePaths[0]
+  })
+
+  ipcMain.handle('get-last-selected-directory', async () => {
+    return store.get('lastSelectedDirectory')
+    // return null
   })
 }
 

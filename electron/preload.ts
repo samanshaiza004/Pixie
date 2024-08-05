@@ -54,7 +54,9 @@ const api = {
     ipcRenderer.send('message', 'preload.ts: returning path ' + currentPath)
     return currentPath
   },
-
+  getLastSelectedDirectory: () => {
+    return ipcRenderer.invoke('get-last-selected-directory')
+  },
   isDirectory: (fullPath: string): boolean => {
     try {
       return fs.lstatSync(fullPath).isDirectory()

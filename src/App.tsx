@@ -1,6 +1,5 @@
 // src/App.tsx
-import { GlobalStyle } from './styles/GlobalStyle'
-import { Dirent } from 'original-fs'
+
 import React, { useState, useEffect, useRef } from 'react'
 import { FileItem } from './components/FileItem'
 import { FileAddressItem } from './components/FileAddressItem/FileAddressItem'
@@ -30,19 +29,14 @@ declare global {
       moveDir: (currentPath: string[], newDir: string) => Promise<string[]>
       isDirectory: (path: string) => boolean
       openDirectoryPicker: () => Promise<string | null>
+      getLastSelectedDirectory: () => Promise<string | null>
     }
   }
 }
 
 export function App() {
   const [files, setFiles] = useState<FileInfo[]>([])
-  const [path, setPath] = useState<string[]>([
-    '/',
-    'home',
-    'saman',
-    'dev',
-    'july2024',
-  ])
+  const [path, setPath] = useState<string[]>([])
   const [currentAudio, setCurrentAudio] = useState<string | null>(null)
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -58,12 +52,33 @@ export function App() {
 
   const waveformRef = useRef<HTMLDivElement>(null)
   const waveSurferRef = useRef<WaveSurfer | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
+
+  const fadeOutAndStop = (duration: number = 0.5) => {
+    if (waveSurferRef.current && gainNodeRef.current) {
+      const currentTime = waveSurferRef.current.getCurrentTime()
+      gainNodeRef.current.gain.setValueAtTime(1, currentTime)
+      gainNodeRef.current.gain.linearRampToValueAtTime(0, currentTime + 0.5)
+
+      setTimeout(() => {
+        if (!waveSurferRef.current) return null
+        waveSurferRef.current?.stop()
+        gainNodeRef.current?.gain.setValueAtTime(
+          1,
+          waveSurferRef.current.getCurrentTime()
+        )
+      }, duration * 100)
+    }
+  }
 
   const playAudio = (path: string) => {
     if (waveSurferRef.current) {
-      waveSurferRef.current.stop()
+      fadeOutAndStop()
       // waveSurferRef.current.empty()
-      waveSurferRef.current?.load(path)
+      setTimeout(() => {
+        waveSurferRef.current?.load(path)
+      }, 100)
+
       // waveSurferRef.current?.play()
     }
   }
@@ -85,6 +100,13 @@ export function App() {
   }, [path])
 
   useEffect(() => {
+    const init = async () => {
+      const lastSelectedPath = await window.Main.getLastSelectedDirectory()
+      if (lastSelectedPath) {
+        setPath([lastSelectedPath])
+      }
+    }
+    init()
     if (waveformRef.current) {
       waveSurferRef.current = WaveSurfer.create({
         container: waveformRef.current,
@@ -173,8 +195,8 @@ export function App() {
           <p>Loading...</p>
         )}
       </div>
-      <div>
-        currentAudio: {currentAudio}
+      <div style={{ position: 'fixed', bottom: 64, width: '100%' }}>
+        <span>currentAudio: {currentAudio}</span>
         <div ref={waveformRef} />
       </div>
     </div>
