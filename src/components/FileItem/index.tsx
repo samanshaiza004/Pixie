@@ -1,5 +1,4 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react'
-
 import { Container } from './styles'
 import FileIcons from '../FileIcons'
 
@@ -10,8 +9,17 @@ type FileItemProps = {
 
 export function FileItem(props: FileItemProps) {
   const onClick = props.onClick
+  const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    window.Main.startDrag(props.fileName)
+  }
   return (
-    <Container type="button" onClick={onClick}>
+    <Container
+      type="button"
+      onClick={onClick}
+      draggable={!props.isDirectory}
+      onDragStart={handleDragStart}
+    >
       <div>
         <FileIcons fileName={props.fileName} isDirectory={props.isDirectory} />
       </div>

@@ -2,6 +2,9 @@
 import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
 
 import Store from 'electron-store'
+import path from 'path'
+import fs from 'fs' // Import fs to use file system methods
+
 let mainWindow: BrowserWindow | null
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
@@ -58,6 +61,15 @@ function createWindow() {
     // return null
   })
 }
+
+ipcMain.on('ondragstart', (event, filePath) => {
+  const absolutePath = path.resolve(filePath)
+
+  event.sender.startDrag({
+    file: absolutePath,
+    icon: '/home/saman/dev/july2024/pixie/public/maxresdefault.jpeg',
+  })
+})
 
 async function registerListeners() {
   /**

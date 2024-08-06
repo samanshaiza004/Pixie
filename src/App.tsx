@@ -144,6 +144,17 @@ export function App() {
     }
   }
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const fileName = e.dataTransfer.getData('text/plain')
+    const filePath = window.Main.renderPath([...path, fileName])
+    e.dataTransfer.setData('DownloadURL', `file://${filePath}`)
+  }
+
   const handleDirectorySelected = async (dir: string) => {
     setPath([dir])
   }

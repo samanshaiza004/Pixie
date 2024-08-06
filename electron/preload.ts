@@ -82,6 +82,11 @@ const api = {
   openDirectoryPicker: () => {
     return ipcRenderer.invoke('open-directory-picker')
   },
+  startDrag: (filename: string) => {
+    const filePath = path.join(process.cwd(), filename)
+    ipcRenderer.send('message', 'preload.ts: filePath: ' + filePath)
+    ipcRenderer.send('ondragstart', filePath)
+  },
 }
 
 contextBridge.exposeInMainWorld('Main', api)
