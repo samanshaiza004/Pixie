@@ -77,7 +77,7 @@ export function App() {
       // waveSurferRef.current.empty()
       setTimeout(() => {
         waveSurferRef.current?.load(path)
-      }, 100)
+      }, 10)
 
       // waveSurferRef.current?.play()
     }
@@ -197,6 +197,7 @@ export function App() {
                 }}
                 fileName={file.name}
                 isDirectory={file.isDirectory}
+                location={window.Main.renderPath([...path, file.name])}
               >
                 {file.name}{' '}
               </FileItem>

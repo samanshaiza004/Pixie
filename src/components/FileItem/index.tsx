@@ -5,13 +5,14 @@ import FileIcons from '../FileIcons'
 type FileItemProps = {
   fileName: string
   isDirectory: boolean
+  location: string
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 export function FileItem(props: FileItemProps) {
   const onClick = props.onClick
   const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    window.Main.startDrag(props.fileName)
+    window.Main.startDrag(props.location)
   }
   return (
     <Container
