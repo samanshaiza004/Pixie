@@ -84,8 +84,11 @@ const api = {
   },
   startDrag: (filename: string) => {
     const filePath = path.join(process.cwd(), filename)
-    ipcRenderer.send('message', 'preload.ts: filePath: ' + filePath)
-    ipcRenderer.send('ondragstart', filePath)
+    ipcRenderer.send(
+      'message',
+      'preload.ts: filePath: ' + filePath.slice(30, filePath.length)
+    )
+    ipcRenderer.send('ondragstart', filePath.slice(30, filePath.length))
   },
 }
 
