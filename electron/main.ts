@@ -3,7 +3,6 @@ import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
 
 import Store from 'electron-store'
 import path from 'path'
-import fs from 'fs' // Import fs to use file system methods
 
 let mainWindow: BrowserWindow | null
 
@@ -19,6 +18,8 @@ protocol.registerSchemesAsPrivileged([
   },
 ])
 
+if (require('electron-squirrel-startup')) app.quit()
+
 app.whenReady().then(() => {
   protocol.handle('sample', request => {
     const filePath = request.url.replace('sample:///', '')
@@ -28,7 +29,6 @@ app.whenReady().then(() => {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
     height: 700,
     backgroundColor: '#f8f8ff',
@@ -58,7 +58,6 @@ function createWindow() {
 
   ipcMain.handle('get-last-selected-directory', async () => {
     return store.get('lastSelectedDirectory')
-    // return null
   })
 }
 

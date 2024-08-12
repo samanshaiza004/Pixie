@@ -8,25 +8,7 @@ Features
 - Directory Browsing: Easily navigate through your file system to locate your samples.
 - Easy Setup: Simple and straightforward setup process.
 
-```bash
-yarn
-```
-
-## Usage
-
-Just run `start` script.
-
-```bash
-yarn start
-```
-
-## Packaging
-
-To generate the project package based on the OS you're running on, just run:
-
-```bash
-yarn package
-```
+## Installation
 
 ## Contributing
 

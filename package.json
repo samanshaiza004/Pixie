@@ -2,7 +2,7 @@
   "name": "pixie",
   "author": "saman shaiza",
   "description": "a simple sample expolorer",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",
     "@timfish/webpack-asset-relocator-loader": "^0.1.0",
+    "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^10.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -30,11 +31,11 @@
     "@babel/preset-env": "7.14.5",
     "@babel/preset-react": "7.14.5",
     "@babel/preset-typescript": "7.14.5",
-    "@electron-forge/cli": "6.0.0-beta.57",
-    "@electron-forge/maker-deb": "6.0.0-beta.57",
-    "@electron-forge/maker-rpm": "6.0.0-beta.57",
-    "@electron-forge/maker-squirrel": "6.0.0-beta.57",
-    "@electron-forge/maker-zip": "6.0.0-beta.57",
+    "@electron-forge/cli": "^6.0.0-beta.57",
+    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.0.0-beta.57",
     "@electron-forge/plugin-webpack": "6.0.0-beta.57",
     "@marshallofsound/webpack-asset-relocator-loader": "0.5.0",
     "@testing-library/jest-dom": "5.14.1",
@@ -78,9 +79,9 @@
         ]
       },
       "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
+        {
+          "name": "@electron-forge/plugin-webpack",
+          "config": {
             "mainConfig": "./webpack/main.webpack.js",
             "renderer": {
               "config": "./webpack/renderer.webpack.js",
@@ -96,7 +97,7 @@
               ]
             }
           }
-        ]
+        }
       ],
       "makers": [
         {
@@ -118,6 +119,12 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "pixie"
+          }
         }
       ]
     }
