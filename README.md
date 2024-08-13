@@ -10,6 +10,8 @@ Features
 
 ## Installation
 
+Binaries for Windows, and Linux are available on the [Releases](https://github.com/samanshaiza004/pixie/releases) page.
+
 ## Contributing
 
 Pull requests are always welcome 😃.
