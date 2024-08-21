@@ -1,3 +1,4 @@
+// electron/preload.ts
 import { contextBridge, ipcRenderer } from 'electron'
 import fs from 'fs'
 import path from 'path'
@@ -7,7 +8,7 @@ interface FileInfo {
   isDirectory: boolean
 }
 
-const api = {
+export const api = {
   /** Sends a message to the main process */
   sendMessage: (message: string) => {
     ipcRenderer.send('message', message)
@@ -96,9 +97,43 @@ const api = {
 
   /** Initiates a drag event for a file */
   startDrag: (filename: string) => {
-    const filePath = path.join(process.cwd(), filename)
     ipcRenderer.send('message', 'Starting drag for file: ' + filename)
     ipcRenderer.send('ondragstart', filename)
+  },
+
+  search: (directoryParts: string[], query: string): Promise<FileInfo[]> => {
+    const directoryPath = path.join(...directoryParts)
+
+    const searchRecursively = (dir: string, query: string): FileInfo[] => {
+      let results: FileInfo[] = []
+      try {
+        const files = fs.readdirSync(dir, { withFileTypes: true })
+        files.forEach(file => {
+          const fullPath = path.join(dir, file.name)
+          if (file.name.includes(query)) {
+            results.push({
+              name: fullPath,
+              isDirectory: file.isDirectory(),
+            })
+          }
+          if (file.isDirectory()) {
+            results = results.concat(searchRecursively(fullPath, query))
+          }
+        })
+      } catch (err: any) {
+        ipcRenderer.send('message', `Error searching directory ${dir}: ${err}`)
+      }
+      return results
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        const results = searchRecursively(directoryPath, query)
+        resolve(results)
+      } catch (err) {
+        reject(err)
+      }
+    })
   },
 }
 

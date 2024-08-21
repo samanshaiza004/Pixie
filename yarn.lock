@@ -1070,15 +1070,6 @@
     username "^5.1.0"
     yarn-or-npm "^3.0.1"
 
-"@electron-forge/maker-base@6.0.0-beta.57":
-  version "6.0.0-beta.57"
-  resolved "https://registry.npmjs.org/@electron-forge/maker-base/-/maker-base-6.0.0-beta.57.tgz"
-  integrity sha512-VnoSCeyCHBv9q0Bz9JRgKC1b4k3z/Qb2T9DrpMqEVW6ClZVkOAZVmjyEtb+Xn8DnRPc4UtSjpAquycC/AZJ4MQ==
-  dependencies:
-    "@electron-forge/shared-types" "6.0.0-beta.57"
-    fs-extra "^10.0.0"
-    which "^2.0.2"
-
 "@electron-forge/maker-base@6.4.2":
   version "6.4.2"
   resolved "https://registry.npmjs.org/@electron-forge/maker-base/-/maker-base-6.4.2.tgz"
@@ -1099,12 +1090,12 @@
     electron-installer-debian "^3.2.0"
 
 "@electron-forge/maker-rpm@^6.0.0-beta.57":
-  version "6.0.0-beta.57"
-  resolved "https://registry.npmjs.org/@electron-forge/maker-rpm/-/maker-rpm-6.0.0-beta.57.tgz"
-  integrity sha512-ZfnJqY9waLef09zlyjWV6jfH1F6ejCPrEULLU4bgcISQJ1JlR/zBlAw6ug3vIeMT7WYxTOOObHKPnnddWmfMmQ==
+  version "6.4.2"
+  resolved "https://registry.npmjs.org/@electron-forge/maker-rpm/-/maker-rpm-6.4.2.tgz"
+  integrity sha512-+hfbY5pYbAer0y07OtOzVgVBHoTRmemqqZ//T0mKJpyK2ThHKGTvyW8FFlr5jlQs5LoDCM2WHKE8oGtRhivsMg==
   dependencies:
-    "@electron-forge/maker-base" "6.0.0-beta.57"
-    "@electron-forge/shared-types" "6.0.0-beta.57"
+    "@electron-forge/maker-base" "6.4.2"
+    "@electron-forge/shared-types" "6.4.2"
   optionalDependencies:
     electron-installer-redhat "^3.2.0"
 
@@ -2809,9 +2800,9 @@ aws4@^1.8.0:
   integrity sha512-3AungXC4I8kKsS9PuS4JH2nc+0bVY/mjgrephHTIi8fpEeGsTHBUJeosp0Wc1myYMElmD0B3Oc4XL/HVJ4PV2g==
 
 axios@^1.6.1:
-  version "1.7.3"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.7.3.tgz"
-  integrity sha512-Ar7ND9pU99eJ9GpoGQKhKf58GpUOgnzuaB7ueNQ5BMi0p+LZ5oaEnfF999fAArcTIBwXTCHAmGcHOZJaWPq9Nw==
+  version "1.7.4"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.7.4.tgz"
+  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"

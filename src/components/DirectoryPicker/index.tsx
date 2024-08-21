@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface DirectoryPickerProps {
-  onDirectorySelected: (directory: string) => void
+  onDirectorySelected: (directory: string[]) => void
 }
 
 export const DirectoryPicker: React.FC<DirectoryPickerProps> = ({
@@ -10,7 +10,7 @@ export const DirectoryPicker: React.FC<DirectoryPickerProps> = ({
   const handlePickDirectory = async () => {
     const directory = await window.Main.openDirectoryPicker()
     if (directory) {
-      onDirectorySelected(directory)
+      onDirectorySelected([directory])
     }
   }
 
