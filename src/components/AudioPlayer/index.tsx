@@ -20,7 +20,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldReplay }) => {
     <div
       style={{
         position: 'fixed',
-        bottom: 64,
+        bottom: 32,
         width: '100%',
         backgroundColor: '#f8f8ff',
       }}

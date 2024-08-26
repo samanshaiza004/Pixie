@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react'
 import WaveSurfer from 'wavesurfer.js'
-import { values } from '../../../webpack/rules.webpack'
 
 interface AudioContextProps {
   currentAudio: string | null

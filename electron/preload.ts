@@ -101,6 +101,15 @@ export const api = {
     ipcRenderer.send('ondragstart', filename)
   },
 
+  doesFileExist: (filePath: string): boolean => {
+    try {
+      return fs.existsSync(filePath)
+    } catch (err) {
+      ipcRenderer.send('message', 'Error checking if file exists: ' + err)
+      return false
+    }
+  },
+
   search: (directoryParts: string[], query: string): Promise<FileInfo[]> => {
     const directoryPath = path.join(...directoryParts)
 

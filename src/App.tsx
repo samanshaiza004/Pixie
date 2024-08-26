@@ -13,7 +13,6 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [searchResults, setSearchResults] = useState<FileInfo[]>([])
   const [files, setFiles] = useState<FileInfo[]>([])
-  const [shouldReplay, setShouldReplay] = useState<boolean>(false)
   const FILE_EXTENSIONS = {
     images: ['jpg', 'png'],
     text: ['txt', 'md'],
@@ -44,9 +43,13 @@ export function App() {
 
   /** Initiates a search for files and directories matching the query */
   const searchFiles = () => {
-    window.Main.search(directoryPath, searchQuery)
-      .then((result: any) => setSearchResults(result))
-      .catch((err: any) => window.Main.sendMessage('App.tsx: ' + err))
+    if (searchQuery.length > 0) {
+      window.Main.search(directoryPath, searchQuery)
+        .then((result: any) => setSearchResults(result))
+        .catch((err: any) => window.Main.sendMessage('App.tsx: ' + err))
+    } else {
+      setSearchResults([])
+    }
   }
 
   useEffect(() => {
@@ -67,11 +70,18 @@ export function App() {
   const handleFileClick = (file: FileInfo) => {
     setCurrentAudio('')
     const extension = file.name.split('.').pop()
-    const filePath = window.Main.renderPath([...directoryPath, file.name])
-    if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
-      const audioPath = window.Main.renderPath([...directoryPath, file.name])
 
-      playAudio(`sample:///${audioPath}`)
+    if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
+      let newName = file.name.substring(
+        window.Main.renderPath([...directoryPath]).length
+      )
+      window.Main.sendMessage('' + newName)
+      const audioPath = window.Main.renderPath([...directoryPath, newName])
+      if (window.Main.doesFileExist(audioPath)) {
+        playAudio(`sample:///${audioPath}`)
+      } else {
+        window.Main.sendMessage('App.tsx: File does not exist: ' + audioPath)
+      }
       /* window.Main.sendMessage('App.tsx: shouldReplay: ' + shouldReplay)
       if (currentAudio === filePath) {
         setShouldReplay(true)

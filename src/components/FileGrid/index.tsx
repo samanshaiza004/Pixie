@@ -24,7 +24,13 @@ const FileGrid: React.FC<FileGridProps> = ({
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        maxHeight: 'calc(100vh - 200px)',
+      }}
+    >
       {files.length > 0 ? (
         files.map((file, index) => (
           <FileItem
