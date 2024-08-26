@@ -2,7 +2,7 @@
   "name": "pixie",
   "author": "saman shaiza",
   "description": "a simple sample expolorer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "electron-forge start",
