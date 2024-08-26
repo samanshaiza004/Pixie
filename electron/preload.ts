@@ -1,12 +1,10 @@
 // electron/preload.ts
+import { render } from '@testing-library/react'
 import { contextBridge, ipcRenderer } from 'electron'
 import fs from 'fs'
 import path from 'path'
 
-interface FileInfo {
-  name: string
-  isDirectory: boolean
-}
+import { FileInfo } from '../src/@types/FileInfo'
 
 export const api = {
   /** Sends a message to the main process */
@@ -33,6 +31,7 @@ export const api = {
         } else {
           const fileInfoList = files.map(file => ({
             name: file.name,
+            location: directoryPath,
             isDirectory: file.isDirectory(),
           }))
           resolve(fileInfoList)
@@ -121,7 +120,8 @@ export const api = {
           const fullPath = path.join(dir, file.name)
           if (file.name.includes(query)) {
             results.push({
-              name: fullPath,
+              name: file.name,
+              location: fullPath,
               isDirectory: file.isDirectory(),
             })
           }

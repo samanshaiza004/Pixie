@@ -23,6 +23,7 @@
     "react-dom": "17.0.2",
     "react-hot-loader": "4.13.0",
     "styled-components": "5.3.0",
+    "update-electron-app": "^3.0.0",
     "wavesurfer.js": "^7.8.2"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.0.0-beta.57",
     "@electron-forge/plugin-webpack": "6.0.0-beta.57",
+    "@electron-forge/publisher-github": "^7.4.0",
     "@marshallofsound/webpack-asset-relocator-loader": "0.5.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.2.7",
@@ -70,8 +72,20 @@
   },
   "config": {
     "forge": {
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "samanshaiza004",
+              "name": "Pixie"
+            },
+            "prerelease": true
+          }
+        }
+      ],
       "packagerConfig": {
-        "name": "pixie",
+        "name": "Pixie",
         "executableName": "pixie",
         "icon": "assets/icon",
         "extraResource": [

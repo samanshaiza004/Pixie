@@ -39,9 +39,7 @@ const FileGrid: React.FC<FileGridProps> = ({
             fileName={file.name}
             isDirectory={file.isDirectory}
             location={window.Main.renderPath([...directoryPath, file.name])}
-          >
-            {file.name}
-          </FileItem>
+          />
         ))
       ) : (
         <p>Loading...</p>

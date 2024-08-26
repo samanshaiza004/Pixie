@@ -1,8 +1,17 @@
 // electron/main.ts
 import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
+import { updateElectronApp } from 'update-electron-app'
+import { autoUpdater } from 'electron'
 
 import Store from 'electron-store'
 import path from 'path'
+
+const serverUrl = 'https://update.electronjs.org'
+const feed = `${serverUrl}/samanshaiza004/pixie/${process.platform}-${
+  process.arch
+}/${app.getVersion()}`
+
+autoUpdater.setFeedURL(feed)
 
 let mainWindow: BrowserWindow | null
 

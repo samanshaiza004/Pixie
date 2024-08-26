@@ -52,6 +52,15 @@ export function App() {
     }
   }
 
+  const handleDirectoryClick = (directory: string[]) => {
+    if (searchQuery.length > 0) {
+      setSearchQuery('')
+      let newDirectory = directory.slice(3)
+    } else {
+      setDirectoryPath(directory)
+    }
+  }
+
   useEffect(() => {
     fetchFiles()
   }, [directoryPath])
@@ -70,25 +79,26 @@ export function App() {
   const handleFileClick = (file: FileInfo) => {
     setCurrentAudio('')
     const extension = file.name.split('.').pop()
-
-    if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
-      let newName = file.name.substring(
-        window.Main.renderPath([...directoryPath]).length
-      )
-      window.Main.sendMessage('' + newName)
-      const audioPath = window.Main.renderPath([...directoryPath, newName])
-      if (window.Main.doesFileExist(audioPath)) {
-        playAudio(`sample:///${audioPath}`)
-      } else {
-        window.Main.sendMessage('App.tsx: File does not exist: ' + audioPath)
+    window.Main.sendMessage('App.tsx: extension: ' + file.name)
+    try {
+      if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
+        let audioPath = ''
+        if (searchQuery.length > 0) {
+          console.log(file.location)
+          audioPath = window.Main.renderPath([file.location])
+          window.Main.sendMessage('' + audioPath)
+        } else {
+          audioPath = window.Main.renderPath([...directoryPath, file.name])
+          window.Main.sendMessage('' + audioPath)
+        }
+        if (window.Main.doesFileExist(audioPath)) {
+          playAudio(`sample:///${audioPath}`)
+        } else {
+          window.Main.sendMessage('App.tsx: File does not exist: ' + audioPath)
+        }
       }
-      /* window.Main.sendMessage('App.tsx: shouldReplay: ' + shouldReplay)
-      if (currentAudio === filePath) {
-        setShouldReplay(true)
-      } else {
-        setShouldReplay(false)
-        setCurrentAudio(audioPath)
-      } */
+    } catch (err) {
+      window.Main.sendMessage('App.tsx: ' + err)
     }
   }
 
@@ -107,7 +117,7 @@ export function App() {
       <FileGrid
         files={searchResults.length > 0 ? searchResults : files}
         directoryPath={directoryPath}
-        onDirectoryClick={setDirectoryPath}
+        onDirectoryClick={handleDirectoryClick}
         onFileClick={handleFileClick}
       />
       <AudioPlayer
