@@ -6,4 +6,10 @@ module.exports = {
   module: {
     rules: require('./rules.webpack'),
   },
+  target: 'electron-renderer',
+  resolve: {
+    fallback: {
+      path: require.resolve('path-browserify'),
+    },
+  },
 }

@@ -1,5 +1,15 @@
 // electron/main.ts
-import { app, BrowserWindow, dialog, ipcMain, net, protocol } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  net,
+  protocol,
+  globalShortcut,
+  Menu,
+  MenuItem,
+} from 'electron'
 import { updateElectronApp } from 'update-electron-app'
 import { autoUpdater } from 'electron'
 
@@ -35,6 +45,26 @@ app.whenReady().then(() => {
     return net.fetch('file://' + filePath)
   })
 })
+
+const menu = new Menu()
+menu.append(
+  new MenuItem({
+    label: 'Search',
+    submenu: [
+      {
+        role: 'help',
+        accelerator: process.platform === 'darwin' ? 'Cmd+L' : 'Ctrl+L',
+        click: () => {
+          mainWindow?.webContents.executeJavaScript(
+            "document.getElementById('search-bar').focus()"
+          )
+        },
+      },
+    ],
+  })
+)
+
+Menu.setApplicationMenu(menu)
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -75,7 +105,7 @@ ipcMain.on('ondragstart', (event, filePath) => {
 
   event.sender.startDrag({
     file: absolutePath,
-    icon: '/home/saman/dev/july2024/pixie/public/maxresdefault.jpeg',
+    icon: 'public/maxresdefault.jpeg',
   })
 })
 

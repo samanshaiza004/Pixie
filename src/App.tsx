@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+// src/App.tsx
+
+import { useState, useEffect, useReducer } from 'react'
 import { DirectoryPicker } from './components/DirectoryPicker'
 import DirectoryView from './components/DirectoryView'
 import SearchBar from './components/SearchBar'
@@ -47,6 +49,7 @@ export function App() {
       window.Main.search(directoryPath, searchQuery)
         .then((result: any) => setSearchResults(result))
         .catch((err: any) => window.Main.sendMessage('App.tsx: ' + err))
+        .finally(() => {})
     } else {
       setSearchResults([])
     }
@@ -55,7 +58,10 @@ export function App() {
   const handleDirectoryClick = (directory: string[]) => {
     if (searchQuery.length > 0) {
       setSearchQuery('')
-      let newDirectory = directory.slice(3)
+      let newDirectory = directory
+      window.Main.sendMessage('App.tsx: newDirectory: ' + newDirectory)
+      setDirectoryPath(newDirectory)
+      setSearchResults([])
     } else {
       setDirectoryPath(directory)
     }
@@ -94,7 +100,7 @@ export function App() {
         if (window.Main.doesFileExist(audioPath)) {
           playAudio(`sample:///${audioPath}`)
         } else {
-          window.Main.sendMessage('App.tsx: File does not exist: ' + audioPath)
+          throw new Error('File does not exist: ' + audioPath)
         }
       }
     } catch (err) {
@@ -113,6 +119,7 @@ export function App() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onSearch={searchFiles}
+        setSearchResults={setSearchResults}
       />
       <FileGrid
         files={searchResults.length > 0 ? searchResults : files}
