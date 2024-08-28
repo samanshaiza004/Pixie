@@ -22,7 +22,6 @@ Pixie is a simple, multi-platform sample explorer designed to make music creatio
 ## Upcoming Features
 
 - Tags: Easily organize your samples by tags.
-- Metadata: View metadata for your samples.
 
 ## Installation
 

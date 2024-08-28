@@ -37,6 +37,7 @@ export const AudioProvider: React.FC = ({ children }) => {
       barRadius: 30,
       barHeight: 4,
       height: 64,
+      dragToSeek: true,
     })
     if (waveSurferRef.current) {
       waveSurferRef.current.setVolume(volume)

@@ -47,22 +47,20 @@ app.whenReady().then(() => {
 })
 
 const menu = new Menu()
-/* menu.append(
+menu.append(
   new MenuItem({
-    label: 'Search',
+    label: 'File',
     submenu: [
       {
-        role: 'help',
-        accelerator: process.platform === 'darwin' ? 'Cmd+L' : 'Ctrl+L',
+        role: 'quit',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
         click: () => {
-          mainWindow?.webContents.executeJavaScript(
-            "document.getElementById('search-bar').focus()"
-          )
+          app.quit()
         },
       },
     ],
   })
-) */
+)
 
 Menu.setApplicationMenu(menu)
 

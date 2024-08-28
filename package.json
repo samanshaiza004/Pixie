@@ -1,7 +1,7 @@
 {
   "name": "pixie",
   "author": "saman shaiza",
-  "description": "a simple sample expolorer",
+  "description": "a simple sample explorer",
   "version": "0.1.1",
   "main": "./.webpack/main/index.js",
   "scripts": {
@@ -118,12 +118,6 @@
       ],
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "pixie"
-          }
-        },
-        {
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin"
@@ -140,7 +134,9 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "pixie"
+            "name": "pixie",
+            "author": "saman shaiza",
+            "description": "a simple sample explorer"
           }
         }
       ]
