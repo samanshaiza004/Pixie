@@ -1,5 +1,5 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react'
-import { Container } from './styles'
+import { Container, Span } from './styles'
 import FileIcons from '../FileIcons'
 
 type FileItemProps = {
@@ -24,7 +24,7 @@ export function FileItem(props: FileItemProps) {
       <div>
         <FileIcons fileName={props.fileName} isDirectory={props.isDirectory} />
       </div>
-      {props.fileName}
+      <Span>{props.fileName}</Span>
     </Container>
   )
 }

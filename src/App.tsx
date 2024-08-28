@@ -8,6 +8,8 @@ import FileGrid from './components/FileGrid'
 import AudioPlayer from './components/AudioPlayer'
 import { FileInfo } from './@types/FileInfo'
 import { useAudio } from './hooks/AudioContextProvider'
+import MetadataDisplay from './components/MetadataDisplay'
+
 export function App() {
   const [directoryPath, setDirectoryPath] = useState<string[]>([])
   const [currentAudio, setCurrentAudio] = useState<string | null>(null)
@@ -15,10 +17,24 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [searchResults, setSearchResults] = useState<FileInfo[]>([])
   const [files, setFiles] = useState<FileInfo[]>([])
+  const [audioMetadata, setAudioMetadata] = useState<any>(null)
   const FILE_EXTENSIONS = {
     images: ['jpg', 'png'],
     text: ['txt', 'md'],
-    audio: ['mp3', 'wav', 'flac', 'ogg'],
+    audio: [
+      'mp3',
+      'mp2',
+      'mp1',
+      'aif',
+      'aiff',
+      'aifc',
+      'wav',
+      'wave',
+      'bwf',
+      'flac',
+      'flc',
+      'ogg',
+    ],
     video: ['mp4', 'mov', 'avi'],
   }
 
@@ -80,12 +96,30 @@ export function App() {
     }
 
     initializeApp()
+
+    const keyDownHandler = (event: any) => {
+      console.log('User pressed: ', event.key)
+
+      if (event.key === 'Enter') {
+        event.preventDefault()
+
+        if (currentAudio) {
+          playAudio(currentAudio)
+        }
+      }
+    }
+
+    document.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
   }, [])
 
-  const handleFileClick = (file: FileInfo) => {
+  const handleFileClick = async (file: FileInfo) => {
     setCurrentAudio('')
     const extension = file.name.split('.').pop()
-    window.Main.sendMessage('App.tsx: extension: ' + file.name)
+
     try {
       if (extension && FILE_EXTENSIONS.audio.includes(extension)) {
         let audioPath = ''
@@ -98,6 +132,8 @@ export function App() {
           window.Main.sendMessage('' + audioPath)
         }
         if (window.Main.doesFileExist(audioPath)) {
+          const metadata = await window.Main.getAudioMetadata(audioPath)
+          setAudioMetadata(metadata)
           playAudio(`sample:///${audioPath}`)
         } else {
           throw new Error('File does not exist: ' + audioPath)
@@ -109,7 +145,7 @@ export function App() {
   }
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: '80vh' }}>
       <DirectoryPicker onDirectorySelected={setDirectoryPath} />
       <DirectoryView
         directoryPath={directoryPath}
@@ -121,12 +157,29 @@ export function App() {
         onSearch={searchFiles}
         setSearchResults={setSearchResults}
       />
-      <FileGrid
-        files={searchResults.length > 0 ? searchResults : files}
-        directoryPath={directoryPath}
-        onDirectoryClick={handleDirectoryClick}
-        onFileClick={handleFileClick}
-      />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: '10px',
+          padding: '10px',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          height: '100%',
+        }}
+      >
+        <FileGrid
+          files={searchResults.length > 0 ? searchResults : files}
+          directoryPath={directoryPath}
+          onDirectoryClick={handleDirectoryClick}
+          onFileClick={handleFileClick}
+        />
+        <div>
+          <MetadataDisplay metadata={audioMetadata || null} />
+        </div>
+      </div>
+
       <AudioPlayer
         currentAudio={currentAudio}
         volume={volume}

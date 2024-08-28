@@ -27,8 +27,11 @@ const FileGrid: React.FC<FileGridProps> = ({
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gap: '2px',
+        flex: '2',
         maxHeight: 'calc(100vh - 200px)',
+        overflowY: 'auto',
       }}
     >
       {files.length > 0 ? (

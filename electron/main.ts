@@ -47,7 +47,7 @@ app.whenReady().then(() => {
 })
 
 const menu = new Menu()
-menu.append(
+/* menu.append(
   new MenuItem({
     label: 'Search',
     submenu: [
@@ -62,7 +62,7 @@ menu.append(
       },
     ],
   })
-)
+) */
 
 Menu.setApplicationMenu(menu)
 

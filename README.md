@@ -1,12 +1,28 @@
 ## Pixie
 
+> [!CAUTION]
+> Pixie is still a very **_very_** early in development and is not yet ready for use.
+
 Pixie is a simple, multi-platform sample explorer designed to make music creation friction-less and fun again. With Pixie, you can easily browse, organize, and play your audio samples using an intuitive interface powered by Electron and React.
 
-Features
+## Goals
 
-- Cross-Platform: Works on Windows, macOS, and Linux.
+- To achieve a simple, portable, and efficient system for organizing and playing audio samples.
+- To be extendable and customizable to suit your needs.
+
+## Features
+
+- Cross-Platform: Works on Windows, and Linux. MacOS support is coming soon.
 - Directory Browsing: Easily navigate through your file system to locate your samples.
-- Easy Setup: Simple and straightforward setup process.
+- Audio Playback: Play your samples directly from the app.
+- Waveform Visualization: View the waveform of your samples.
+- Metadata Support: View metadata for your samples.
+- Search: Find specific files or directories using the search bar.
+
+## Upcoming Features
+
+- Tags: Easily organize your samples by tags.
+- Metadata: View metadata for your samples.
 
 ## Installation
 

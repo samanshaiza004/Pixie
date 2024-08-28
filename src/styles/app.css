@@ -1,0 +1,50 @@
+/* Container styling for side-by-side layout */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  flex: 2;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* General styles */
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Ensure the display is responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .file-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+}

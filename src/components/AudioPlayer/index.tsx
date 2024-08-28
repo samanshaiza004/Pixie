@@ -25,7 +25,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldReplay }) => {
         backgroundColor: '#f8f8ff',
       }}
     >
-      <span>currentAudio: {currentAudio}</span>
       <div id="waveform" />
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>Volume: </span>

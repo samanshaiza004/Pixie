@@ -5,6 +5,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { FileInfo } from '../src/@types/FileInfo'
+import { parseFile } from 'music-metadata'
 
 export const api = {
   /** Sends a message to the main process */
@@ -143,6 +144,16 @@ export const api = {
         reject(err)
       }
     })
+  },
+  getAudioMetadata: async (filePath: string) => {
+    try {
+      const metadata = await parseFile(filePath)
+
+      return metadata
+    } catch (err) {
+      ipcRenderer.send('message', 'Error getting audio metadata: ' + err)
+      return null
+    }
   },
 }
 
