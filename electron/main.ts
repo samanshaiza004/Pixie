@@ -46,23 +46,23 @@ app.whenReady().then(() => {
   })
 })
 
-const menu = new Menu()
-menu.append(
-  new MenuItem({
-    label: 'File',
-    submenu: [
-      {
-        role: 'quit',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
-        click: () => {
-          app.quit()
-        },
-      },
-    ],
-  })
-)
+// const menu = new Menu()
+// menu.append(
+//   new MenuItem({
+//     label: 'File',
+//     submenu: [
+//       {
+//         role: 'quit',
+//         accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
+//         click: () => {
+//           app.quit()
+//         },
+//       },
+//     ],
+//   })
+// )
 
-Menu.setApplicationMenu(menu)
+// Menu.setApplicationMenu(menu)
 
 function createWindow() {
   mainWindow = new BrowserWindow({
